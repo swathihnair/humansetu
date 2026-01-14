@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.svelte";
+import Hero from "../components/Hero.svelte";
+import Destinations from "../components/Destinations.svelte";
+import Experiences from "../components/Experiences.svelte";
+import About from "../components/About.svelte";
+import Contact from "../components/Contact.svelte";
+import Footer from "../components/Footer.svelte";
+---
+
+<Layout title="Discover Kerala - God's Own Country">
+    <Navbar client:load />
+    <Hero client:load />
+    <Destinations client:load />
+    <Experiences client:load />
+    <About client:load />
+    <Contact client:load />
+    <Footer />
+</Layout>
