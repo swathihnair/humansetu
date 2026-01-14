@@ -8,16 +8,12 @@
   let cells = [];
   let isLoading = false;
   let backgroundImage = '';
-  let placesData = [];
+  let chatHistory = [];
   
-  // Places API URL
-  const PLACES_API_URL = 'https://script.google.com/macros/s/AKfycbwJN5y85XTG_gAD4JdFx9ZTBTkThe0ixAMZBK10o1N0etluWkdCRXdZLdIUphrZvXj7Ew/exec';
-  
-  // Keywords for matching user queries
-  const keywords = {
-    districts: ['thiruvananthapuram', 'kollam', 'pathanamthitta', 'alappuzha', 'alleppey', 'kottayam', 'idukki', 'ernakulam', 'kochi', 'cochin', 'thrissur', 'palakkad', 'malappuram', 'kozhikode', 'calicut', 'wayanad', 'kannur', 'kasaragod', 'munnar'],
-    types: ['beach', 'hill', 'mountain', 'waterfall', 'temple', 'church', 'mosque', 'backwater', 'wildlife', 'sanctuary', 'museum', 'fort', 'palace', 'lake', 'dam', 'tea', 'spice', 'ayurveda', 'trekking', 'adventure', 'nature', 'heritage', 'culture', 'pilgrimage', 'forest']
-  };
+  // Groq AI API - Use environment variable or prompt user
+  // IMPORTANT: Set your API key in .env file as PUBLIC_GROQ_API_KEY
+  const GROQ_API_KEY = import.meta.env.PUBLIC_GROQ_API_KEY || '';
+  const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
   
   // Kerala artform and culture images
   const backgroundImages = [
@@ -33,116 +29,155 @@
     'https://images.unsplash.com/photo-1580281657702-257584239a55?q=80&w=2070'
   ];
   
-  // Fetch places data from Google Sheet
-  async function fetchPlacesData() {
+  // Call Groq AI API
+  async function getAIResponse(userMessage) {
+    const systemPrompt = `You are an expert Kerala tourism assistant. Your job is to analyze the user's travel preferences and recommend ONE PERFECT DESTINATION that matches ALL their interests.
+
+CRITICAL RULES:
+1. When user describes their travel style/preferences, recommend ONLY ONE specific place/region
+2. DO NOT list multiple places across Kerala
+3. Focus deeply on that ONE place with comprehensive details
+4. Match the place to their specific interests (adventure, peace, food, culture, etc.)
+
+PLACE MATCHING GUIDE:
+
+For "backwaters + local food + village life + peaceful + boating":
+→ Recommend: **ALLEPPEY (Alappuzha)**
+
+For "adventure + trekking + nature + wildlife":
+→ Recommend: **WAYANAD**
+
+For "tea gardens + scenic beauty + cool weather + romantic":
+→ Recommend: **MUNNAR**
+
+For "beaches + surfing + ayurveda + relaxation":
+→ Recommend: **KOVALAM** or **VARKALA**
+
+For "culture + heritage + history + art":
+→ Recommend: **KOCHI (Fort Kochi)**
+
+For "wildlife + jungle + spices + boat safari":
+→ Recommend: **THEKKADY**
+
+For "spiritual + temples + traditions":
+→ Recommend: **THRISSUR** or **GURUVAYUR**
+
+RESPONSE FORMAT FOR PERSONALIZED QUERIES:
+
+🎯 **PERFECT MATCH FOR YOU: [PLACE NAME]**
+
+📍 **About [Place Name]:**
+• Location: [District, how to reach]
+• Why it's perfect for you: [Match with their interests]
+
+🌟 **What You'll Experience:**
+• [Experience 1 matching their interest]
+• [Experience 2 matching their interest]
+• [Experience 3 matching their interest]
+• [Experience 4 matching their interest]
+
+🍽️ **Local Food to Try:**
+• [Dish 1] - [Description]
+• [Dish 2] - [Description]
+• [Dish 3] - [Description]
+
+🎭 **Local Culture & Traditions:**
+• [Tradition/Art form 1]
+• [Tradition/Art form 2]
+
+🏠 **Where to Stay:**
+• Budget: [Option]
+• Mid-range: [Option]
+• Luxury: [Option]
+
+📅 **Ideal Duration:** [X days]
+
+🌤️ **Best Time to Visit:** [Months]
+
+💡 **Insider Tips:**
+• [Tip 1]
+• [Tip 2]
+• [Tip 3]
+
+DETAILED PLACE KNOWLEDGE:
+
+**ALLEPPEY (Alappuzha)** - Perfect for: backwaters, houseboats, village life, local food, peaceful
+• Experiences: Houseboat stay on Vembanad Lake, canoe rides through narrow canals, toddy shop visits, coir making villages, Marari beach, Ambalapuzha temple payasam
+• Food: Karimeen (pearl spot fish), duck roast, tapioca with fish curry, toddy, Alleppey fish curry
+• Culture: Nehru Trophy boat race, coir weaving, fishing communities
+• Stay: Houseboats, Lake resorts, Homestays in Kuttanad
+
+**WAYANAD** - Perfect for: adventure, trekking, nature, wildlife, tribal culture
+• Experiences: Chembra Peak trek (heart-shaped lake), Edakkal Caves, Banasura Sagar Dam, Soochipara Falls, Wayanad Wildlife Sanctuary, bamboo rafting
+• Food: Tribal cuisine, bamboo rice, wild honey, organic coffee
+• Culture: Tribal settlements, Thirunelli temple, Pazhassi Raja history
+• Stay: Treehouse resorts, Plantation stays, Eco lodges
+
+**MUNNAR** - Perfect for: scenic beauty, tea gardens, cool weather, romantic, photography
+• Experiences: Tea museum, Eravikulam National Park (Nilgiri Tahr), Top Station, Mattupetty Dam, Echo Point, flower gardens
+• Food: Fresh tea, cardamom coffee, local Kerala meals
+• Culture: Tea plantation heritage, Muthuvan tribes
+• Stay: Tea estate bungalows, Resorts with valley views
+
+**KOCHI (Fort Kochi)** - Perfect for: culture, heritage, history, art, cosmopolitan
+• Experiences: Chinese fishing nets, Mattancherry Palace, Jewish Synagogue, Kathakali shows, art galleries, spice markets, sunset walks
+• Food: Seafood, Malabar biryani, Kerala parotta, toddy shop food
+• Culture: Portuguese-Dutch-British heritage, Kochi-Muziris Biennale, Kathakali, Kalaripayattu
+• Stay: Heritage hotels, Boutique stays in Fort Kochi
+
+**THEKKADY** - Perfect for: wildlife, jungle, spices, adventure, nature
+• Experiences: Periyar boat safari, bamboo rafting, jungle patrol, spice plantation tours, elephant rides, tribal visits
+• Food: Spice-infused dishes, cardamom tea, pepper chicken
+• Culture: Mannan tribe, spice trade history
+• Stay: Jungle lodges, Spice plantation stays
+
+REMEMBER: Analyze user's description carefully and recommend ONLY ONE place that best matches ALL their interests. Give deep, comprehensive details about that ONE place.`;
+
+    // Add to chat history
+    chatHistory.push({ role: 'user', content: userMessage });
+    
+    // Keep only last 10 messages for context
+    const recentHistory = chatHistory.slice(-10);
+    
     try {
-      const response = await fetch(PLACES_API_URL);
-      if (response.ok) {
-        placesData = await response.json();
-        console.log('Places loaded:', placesData.length);
-      }
-    } catch (error) {
-      console.log('Could not fetch places data');
-    }
-  }
-  
-  // Extract keywords from user query
-  function extractKeywords(query) {
-    const lowerQuery = query.toLowerCase();
-    const foundDistricts = [];
-    const foundTypes = [];
-    
-    // Check for district names
-    keywords.districts.forEach(district => {
-      if (lowerQuery.includes(district)) {
-        foundDistricts.push(district);
-      }
-    });
-    
-    // Check for place types
-    keywords.types.forEach(type => {
-      if (lowerQuery.includes(type)) {
-        foundTypes.push(type);
-      }
-    });
-    
-    return { districts: foundDistricts, types: foundTypes };
-  }
-  
-  // Search places based on keywords
-  function searchPlaces(query) {
-    const { districts, types } = extractKeywords(query);
-    const lowerQuery = query.toLowerCase();
-    let results = [];
-    
-    if (placesData.length === 0) return results;
-    
-    // Search by district
-    if (districts.length > 0) {
-      results = placesData.filter(place => {
-        const placeDistrict = (place.district || '').toLowerCase();
-        return districts.some(d => placeDistrict.includes(d));
-      });
-    }
-    
-    // Search by type
-    if (types.length > 0) {
-      const typeResults = placesData.filter(place => {
-        const placeType = (place.type || '').toLowerCase();
-        return types.some(t => placeType.includes(t));
+      const response = await fetch(GROQ_API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${GROQ_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'llama-3.1-8b-instant',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            ...recentHistory
+          ],
+          temperature: 0.7,
+          max_tokens: 1200
+        })
       });
       
-      if (results.length > 0) {
-        // Intersection if we have both district and type
-        results = results.filter(r => typeResults.some(t => t.viste === r.viste));
-        if (results.length === 0) {
-          results = typeResults; // Fallback to type results
-        }
-      } else {
-        results = typeResults;
+      if (!response.ok) {
+        throw new Error('AI API error');
       }
+      
+      const data = await response.json();
+      const aiMessage = data.choices[0]?.message?.content || 'I apologize, I could not process your request. Please try again.';
+      
+      // Add AI response to history
+      chatHistory.push({ role: 'assistant', content: aiMessage });
+      
+      return aiMessage;
+    } catch (error) {
+      console.error('AI Error:', error);
+      return "I'm having trouble connecting right now. 🌴\n\n📍 **Try asking about:**\n• Beaches (Kovalam, Varkala)\n• Hill stations (Munnar, Wayanad)\n• Backwaters (Alleppey, Kumarakom)\n• Wildlife (Thekkady, Wayanad)\n• Culture (Kochi, Thrissur)";
     }
-    
-    // If no specific matches, do a general search
-    if (results.length === 0) {
-      results = placesData.filter(place => {
-        const searchText = `${place.district || ''} ${place.viste || ''} ${place.type || ''}`.toLowerCase();
-        return lowerQuery.split(' ').some(word => word.length > 2 && searchText.includes(word));
-      });
-    }
-    
-    // Limit results
-    return results.slice(0, 6);
-  }
-  
-  // Format places as response with images
-  function formatPlacesResponse(places, query) {
-    if (places.length === 0) {
-      return {
-        text: "🔍 I couldn't find specific places matching your query. Try mentioning:\n\n• A district (Munnar, Wayanad, Kochi, Alleppey)\n• A type (beach, hill, waterfall, temple, wildlife)\n\nOr tell me what kind of experience you're looking for!",
-        places: []
-      };
-    }
-    
-    let text = `🌴 Based on your interests, here are some amazing places to visit:\n\n`;
-    
-    places.forEach((place, index) => {
-      text += `${index + 1}. **${place.viste || 'Unknown'}**\n`;
-      text += `   📍 ${place.district || 'Kerala'} • ${place.type || 'Attraction'}\n\n`;
-    });
-    
-    text += `\nWould you like more details about any of these places?`;
-    
-    return { text, places };
   }
   
   // Initialize grid cells
   onMount(async () => {
     // Select random background image
     backgroundImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
-    
-    // Fetch places data
-    await fetchPlacesData();
     
     // Check if user is logged in
     const storedUser = localStorage.getItem('keralaUser');
@@ -158,7 +193,7 @@
     // Add welcome message
     messages = [{
       type: 'bot',
-      text: `Welcome${userName ? ', ' + userName : ''}! 🌴 I'm your Kerala travel assistant. Tell me what kind of places you'd like to visit - beaches, hills, waterfalls, temples, wildlife, or any district you're interested in!`,
+      text: `Welcome${userName ? ', ' + userName : ''}! 🌴 I'm your AI-powered Kerala travel assistant. Ask me anything about Kerala - places to visit, food to try, best times to travel, or help planning your itinerary!`,
       time: new Date()
     }];
   });
@@ -183,20 +218,25 @@
     inputMessage = '';
     isLoading = true;
     
-    // Search for places
-    const foundPlaces = searchPlaces(userQuery);
-    const response = formatPlacesResponse(foundPlaces, userQuery);
-    
-    // Simulate typing delay
-    setTimeout(() => {
+    try {
+      // Get AI response
+      const aiResponse = await getAIResponse(userQuery);
+      
+      // Add bot message
       messages = [...messages, {
         type: 'bot',
-        text: response.text,
-        places: response.places,
+        text: aiResponse,
         time: new Date()
       }];
+    } catch (error) {
+      messages = [...messages, {
+        type: 'bot',
+        text: "Sorry, I encountered an error. Please try again! 🙏",
+        time: new Date()
+      }];
+    } finally {
       isLoading = false;
-    }, 800);
+    }
   }
   
   function handleKeyPress(event) {
@@ -265,38 +305,6 @@
           <div class="flex {message.type === 'user' ? 'justify-end' : 'justify-start'}">
             <div class="max-w-[85%] {message.type === 'user' ? 'bg-kerala-green text-white' : 'bg-gray-100 text-gray-800'} rounded-2xl px-4 py-3 {message.type === 'user' ? 'rounded-br-md' : 'rounded-bl-md'}">
               <p class="whitespace-pre-line">{message.text}</p>
-              
-              <!-- Place Cards with Images -->
-              {#if message.places && message.places.length > 0}
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                  {#each message.places as place}
-                    <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition cursor-pointer group">
-                      {#if place.link}
-                        <div class="h-24 overflow-hidden">
-                          <img 
-                            src={place.link} 
-                            alt={place.viste} 
-                            class="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                            on:error={(e) => e.target.src = 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=400'}
-                          />
-                        </div>
-                      {:else}
-                        <div class="h-24 bg-gradient-to-br from-kerala-green to-kerala-gold flex items-center justify-center">
-                          <span class="text-3xl">🌴</span>
-                        </div>
-                      {/if}
-                      <div class="p-2">
-                        <h4 class="font-semibold text-sm text-kerala-green truncate">{place.viste || 'Unknown'}</h4>
-                        <p class="text-xs text-gray-500 truncate">{place.district || 'Kerala'}</p>
-                        <span class="inline-block mt-1 px-2 py-0.5 bg-kerala-gold/20 text-kerala-gold text-xs rounded-full truncate">
-                          {place.type || 'Attraction'}
-                        </span>
-                      </div>
-                    </div>
-                  {/each}
-                </div>
-              {/if}
-              
               <span class="text-xs {message.type === 'user' ? 'text-white/70' : 'text-gray-500'} mt-2 block">
                 {message.time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
               </span>
