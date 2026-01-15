@@ -29,6 +29,12 @@
       title: 'Currency',
       description: 'Exchange rates and converters',
       color: 'from-yellow-500 to-amber-600'
+    },
+    {
+      icon: '🚨',
+      title: 'Report Host',
+      description: 'Report accommodation issues',
+      color: 'from-teal-500 to-cyan-600'
     }
   ];
 
@@ -40,6 +46,8 @@
         return '/maps';
       case 'Currency':
         return '/currency';
+      case 'Report Host':
+        return '/report-host';
       case 'Tourist Information Centers':
         return '/tourist-info';
       case 'Emergency Contact':
@@ -65,6 +73,10 @@
       case 'Currency':
         console.log('Navigating to /currency');
         window.location.href = '/currency';
+        break;
+      case 'Report Host':
+        console.log('Navigating to /report-host');
+        window.location.href = '/report-host';
         break;
       case 'Tourist Information Centers':
         console.log('Navigating to /tourist-info');

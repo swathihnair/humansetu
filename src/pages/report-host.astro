@@ -1,0 +1,402 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Report Host - Kerala Tourism">
+  <div class="min-h-screen relative overflow-hidden">
+    <!-- Kerala Themed Background -->
+    <div class="fixed inset-0">
+      <div 
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style="background-image: url('https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1920');"
+      ></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-teal-900/90 via-teal-800/70 to-cyan-600/50"></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="relative z-10">
+      <!-- Header -->
+      <header class="bg-black/20 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <a href="/plan-my-trip" class="text-2xl font-bold text-white hover:scale-105 transition-transform">
+            Kerala<span class="text-kerala-gold">Tourism</span>
+          </a>
+          <div class="flex items-center gap-4">
+            <a href="/plan-my-trip" class="px-4 py-2 text-white/80 border border-white/20 rounded-full hover:bg-white/10 transition-all hover:scale-105">
+              ← Back to Plan My Trip
+            </a>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Hero Section -->
+      <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="relative mb-12 rounded-3xl overflow-hidden animate-slide-up shadow-2xl">
+          <div class="absolute inset-0 bg-gradient-to-r from-teal-600 via-cyan-500 to-teal-600 bg-[length:200%_100%] animate-gradient"></div>
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=1920')] bg-cover bg-center opacity-20"></div>
+          
+          <div class="relative p-8 md:p-16">
+            <div class="text-center">
+              <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center text-5xl mx-auto mb-6 animate-float">
+                🚨
+              </div>
+              <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
+                Report Host
+              </h1>
+              <p class="text-white/90 text-xl md:text-2xl mb-8">
+                Help us improve your travel experience
+              </p>
+              <div class="flex justify-center gap-4">
+                <div class="px-4 py-2 bg-teal-500/20 text-teal-300 rounded-full text-sm border border-teal-500/30">
+                  🛡️ Safe & Confidential
+                </div>
+                <div class="px-4 py-2 bg-cyan-500/20 text-cyan-300 rounded-full text-sm border border-cyan-500/30">
+                  ⚡ Quick Response
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Report Form -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <!-- Form Section -->
+          <div class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 animate-slide-up animation-delay-200">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center text-xl">
+                📝
+              </div>
+              Submit Report
+            </h2>
+            
+            <form id="reportForm" class="space-y-6">
+              <!-- Host Information -->
+              <div>
+                <label class="block text-white/80 text-sm font-medium mb-2">Host Name/Property *</label>
+                <input 
+                  type="text" 
+                  id="hostName"
+                  required
+                  placeholder="Enter the name of the host or property"
+                  class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                >
+              </div>
+              
+              <!-- Location -->
+              <div>
+                <label class="block text-white/80 text-sm font-medium mb-2">Location *</label>
+                <input 
+                  type="text" 
+                  id="location"
+                  required
+                  placeholder="City/District where the property is located"
+                  class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                >
+              </div>
+              
+              <!-- Report Type -->
+              <div>
+                <label class="block text-white/80 text-sm font-medium mb-2">Report Type *</label>
+                <select 
+                  id="reportType"
+                  required
+                  class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                >
+                  <option value="" class="bg-gray-800">Select report type</option>
+                  <option value="cleanliness" class="bg-gray-800">Cleanliness Issues</option>
+                  <option value="service" class="bg-gray-800">Poor Service</option>
+                  <option value="safety" class="bg-gray-800">Safety Concerns</option>
+                  <option value="pricing" class="bg-gray-800">Pricing Issues</option>
+                  <option value="facilities" class="bg-gray-800">Facility Problems</option>
+                  <option value="misconduct" class="bg-gray-800">Staff Misconduct</option>
+                  <option value="fraud" class="bg-gray-800">Fraud/Scam</option>
+                  <option value="other" class="bg-gray-800">Other Issues</option>
+                </select>
+              </div>
+              
+              <!-- Description -->
+              <div>
+                <label class="block text-white/80 text-sm font-medium mb-2">Detailed Description *</label>
+                <textarea 
+                  id="description"
+                  required
+                  rows="4"
+                  placeholder="Please describe the issue in detail..."
+                  class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
+                ></textarea>
+              </div>
+              
+              <!-- Contact Information -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-white/80 text-sm font-medium mb-2">Your Name *</label>
+                  <input 
+                    type="text" 
+                    id="reporterName"
+                    required
+                    placeholder="Your full name"
+                    class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                  >
+                </div>
+                <div>
+                  <label class="block text-white/80 text-sm font-medium mb-2">Contact Number *</label>
+                  <input 
+                    type="tel" 
+                    id="contactNumber"
+                    required
+                    placeholder="Your phone number"
+                    class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                  >
+                </div>
+              </div>
+              
+              <!-- Email -->
+              <div>
+                <label class="block text-white/80 text-sm font-medium mb-2">Email Address</label>
+                <input 
+                  type="email" 
+                  id="email"
+                  placeholder="your.email@example.com"
+                  class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                >
+              </div>
+              
+              <!-- File Upload -->
+              <div>
+                <label class="block text-white/80 text-sm font-medium mb-2">Evidence (Optional)</label>
+                <div class="border-2 border-dashed border-white/30 rounded-xl p-6 text-center hover:border-teal-500 transition-all cursor-pointer">
+                  <input type="file" id="evidence" class="hidden" accept="image/*,.pdf" multiple>
+                  <div class="text-3xl mb-2">📎</div>
+                  <p class="text-white/60 text-sm">Click to upload images or documents</p>
+                  <p class="text-white/40 text-xs mt-1">Max 5 files, 10MB each</p>
+                </div>
+              </div>
+              
+              <!-- Submit Button -->
+              <button 
+                type="submit"
+                class="w-full py-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-teal-500/30 transition-all transform hover:scale-[1.02]"
+              >
+                🚨 Submit Report
+              </button>
+            </form>
+          </div>
+          
+          <!-- Information Section -->
+          <div class="space-y-6">
+            <!-- Quick Actions -->
+            <div class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 animate-slide-up animation-delay-400">
+              <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-xl">
+                  ⚡
+                </div>
+                Quick Actions
+              </h3>
+              
+              <div class="space-y-3">
+                <button class="w-full p-4 bg-red-500/20 border border-red-500/30 rounded-xl hover:bg-red-500/30 transition-all text-left group">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h4 class="font-semibold text-white mb-1">🚨 Emergency Complaint</h4>
+                      <p class="text-white/60 text-sm">For urgent safety concerns</p>
+                    </div>
+                    <span class="text-red-400 group-hover:scale-110 transition-transform">→</span>
+                  </div>
+                </button>
+                
+                <button class="w-full p-4 bg-orange-500/20 border border-orange-500/30 rounded-xl hover:bg-orange-500/30 transition-all text-left group">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h4 class="font-semibold text-white mb-1">📞 Call Helpline</h4>
+                      <p class="text-white/60 text-sm">24/7 support available</p>
+                    </div>
+                    <span class="text-orange-400 group-hover:scale-110 transition-transform">→</span>
+                  </div>
+                </button>
+                
+                <button class="w-full p-4 bg-blue-500/20 border border-blue-500/30 rounded-xl hover:bg-blue-500/30 transition-all text-left group">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h4 class="font-semibold text-white mb-1">💬 Live Chat</h4>
+                      <p class="text-white/60 text-sm">Chat with support team</p>
+                    </div>
+                    <span class="text-blue-400 group-hover:scale-110 transition-transform">→</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Report Guidelines -->
+            <div class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 animate-slide-up animation-delay-600">
+              <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-xl">
+                  📋
+                </div>
+                Report Guidelines
+              </h3>
+              
+              <div class="space-y-4">
+                <div class="flex gap-3">
+                  <span class="text-teal-400 text-xl">✓</span>
+                  <div>
+                    <h4 class="font-semibold text-white mb-1">Be Specific</h4>
+                    <p class="text-white/60 text-sm">Provide detailed information about the issue</p>
+                  </div>
+                </div>
+                
+                <div class="flex gap-3">
+                  <span class="text-teal-400 text-xl">✓</span>
+                  <div>
+                    <h4 class="font-semibold text-white mb-1">Include Evidence</h4>
+                    <p class="text-white/60 text-sm">Photos or documents help with investigation</p>
+                  </div>
+                </div>
+                
+                <div class="flex gap-3">
+                  <span class="text-teal-400 text-xl">✓</span>
+                  <div>
+                    <h4 class="font-semibold text-white mb-1">Stay Factual</h4>
+                    <p class="text-white/60 text-sm">Report only what you experienced</p>
+                  </div>
+                </div>
+                
+                <div class="flex gap-3">
+                  <span class="text-teal-400 text-xl">✓</span>
+                  <div>
+                    <h4 class="font-semibold text-white mb-1">Contact Info</h4>
+                    <p class="text-white/60 text-sm">Provide accurate contact details</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Recent Reports -->
+            <div class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 animate-slide-up animation-delay-800">
+              <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-xl">
+                  📊
+                </div>
+                Recent Activity
+              </h3>
+              
+              <div class="space-y-3">
+                <div class="p-3 bg-white/5 rounded-lg">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h4 class="font-semibold text-white text-sm">Cleanliness Issue</h4>
+                      <p class="text-white/60 text-xs">Kochi • 2 hours ago</p>
+                    </div>
+                    <span class="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">Resolved</span>
+                  </div>
+                </div>
+                
+                <div class="p-3 bg-white/5 rounded-lg">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h4 class="font-semibold text-white text-sm">Service Complaint</h4>
+                      <p class="text-white/60 text-xs">Munnar • 5 hours ago</p>
+                    </div>
+                    <span class="px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full">In Progress</span>
+                  </div>
+                </div>
+                
+                <div class="p-3 bg-white/5 rounded-lg">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h4 class="font-semibold text-white text-sm">Pricing Issue</h4>
+                      <p class="text-white/60 text-xs">Alappuzha • 1 day ago</p>
+                    </div>
+                    <span class="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">Under Review</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Handle form submission
+    document.getElementById('reportForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const formData = {
+        hostName: document.getElementById('hostName').value,
+        location: document.getElementById('location').value,
+        reportType: document.getElementById('reportType').value,
+        description: document.getElementById('description').value,
+        reporterName: document.getElementById('reporterName').value,
+        contactNumber: document.getElementById('contactNumber').value,
+        email: document.getElementById('email').value,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Validate form
+      if (!formData.hostName || !formData.location || !formData.reportType || !formData.description || !formData.reporterName || !formData.contactNumber) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // Show success message
+      alert('Report submitted successfully! We will investigate and contact you within 24 hours.');
+      
+      // Reset form
+      this.reset();
+      
+      // Log for development (in production, this would send to backend)
+      console.log('Report submitted:', formData);
+    });
+    
+    // Handle file upload
+    document.querySelector('[for="evidence"]').addEventListener('click', function() {
+      document.getElementById('evidence').click();
+    });
+    
+    document.getElementById('evidence').addEventListener('change', function(e) {
+      const files = e.target.files;
+      if (files.length > 5) {
+        alert('Maximum 5 files allowed');
+        e.target.value = '';
+        return;
+      }
+      
+      for (let file of files) {
+        if (file.size > 10 * 1024 * 1024) {
+          alert('File size should be less than 10MB');
+          e.target.value = '';
+          return;
+        }
+      }
+    });
+  </script>
+</Layout>
+
+<style>
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  .animate-slide-up { animation: slideUp 0.6s ease-out forwards; opacity: 0; }
+  .animate-gradient { animation: gradient 3s ease infinite; }
+  .animate-float { animation: float 4s ease-in-out infinite; }
+  
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-600 { animation-delay: 600ms; }
+  .animation-delay-800 { animation-delay: 800ms; }
+</style>
