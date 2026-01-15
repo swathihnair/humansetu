@@ -9,8 +9,10 @@
   let isLoading = false;
   let backgroundImage = '';
   let chatHistory = [];
+  let recommendedPlace = ''; // Store the recommended place
+  let awaitingConfirmation = false; // Track if we're waiting for user confirmation
   
-  // Groq AI API - Use environment variable or prompt user
+  // Groq AI API - Use environment variable
   // IMPORTANT: Set your API key in .env file as PUBLIC_GROQ_API_KEY
   const GROQ_API_KEY = import.meta.env.PUBLIC_GROQ_API_KEY || '';
   const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -167,10 +169,68 @@ REMEMBER: Analyze user's description carefully and recommend ONLY ONE place that
       // Add AI response to history
       chatHistory.push({ role: 'assistant', content: aiMessage });
       
+      // Extract place name from response for matching
+      const placeMatch = aiMessage.match(/\*\*(?:PERFECT MATCH FOR YOU:|RECOMMENDED:)?\s*([A-Z][A-Za-z\s()]+)\*\*/);
+      if (placeMatch) {
+        recommendedPlace = placeMatch[1].trim();
+      }
+      
       return aiMessage;
     } catch (error) {
       console.error('AI Error:', error);
       return "I'm having trouble connecting right now. 🌴\n\n📍 **Try asking about:**\n• Beaches (Kovalam, Varkala)\n• Hill stations (Munnar, Wayanad)\n• Backwaters (Alleppey, Kumarakom)\n• Wildlife (Thekkady, Wayanad)\n• Culture (Kochi, Thrissur)";
+    }
+  }
+  
+  // Navigate to matching page
+  function goToMatching() {
+    if (recommendedPlace) {
+      localStorage.setItem('selectedPlace', recommendedPlace);
+      window.location.href = '/matching';
+    }
+  }
+  
+  // Suggest other places
+  async function suggestOtherPlaces() {
+    isLoading = true;
+    awaitingConfirmation = false;
+    
+    const otherPlacesQuery = `I'm not fully convinced about ${recommendedPlace}. Can you suggest a DIFFERENT place in Kerala that might also match my interests? Give me another option with the same detailed format.`;
+    
+    messages = [...messages, {
+      type: 'user',
+      text: "Show me other options 🔄",
+      time: new Date()
+    }];
+    
+    try {
+      const aiResponse = await getAIResponse(otherPlacesQuery);
+      
+      messages = [...messages, {
+        type: 'bot',
+        text: aiResponse,
+        time: new Date()
+      }];
+      
+      if (recommendedPlace) {
+        awaitingConfirmation = true;
+        setTimeout(() => {
+          messages = [...messages, {
+            type: 'bot',
+            text: `🏠 Would you like me to find local hosts in **${recommendedPlace}** who can give you an authentic experience?`,
+            time: new Date(),
+            showHostButton: true
+          }];
+        }, 1000);
+      }
+    } catch (error) {
+      messages = [...messages, {
+        type: 'bot',
+        text: "Sorry, I couldn't fetch other options. Please try again! 🙏",
+        time: new Date()
+      }];
+    } finally {
+      isLoading = false;
     }
   }
   
@@ -208,6 +268,12 @@ REMEMBER: Analyze user's description carefully and recommend ONLY ONE place that
     
     const userQuery = inputMessage;
     
+    // Check if user is confirming to find hosts
+    if (awaitingConfirmation && (userQuery.toLowerCase().includes('yes') || userQuery.toLowerCase().includes('find') || userQuery.toLowerCase().includes('host'))) {
+      goToMatching();
+      return;
+    }
+    
     // Add user message
     messages = [...messages, {
       type: 'user',
@@ -217,6 +283,7 @@ REMEMBER: Analyze user's description carefully and recommend ONLY ONE place that
     
     inputMessage = '';
     isLoading = true;
+    awaitingConfirmation = false;
     
     try {
       // Get AI response
@@ -228,6 +295,19 @@ REMEMBER: Analyze user's description carefully and recommend ONLY ONE place that
         text: aiResponse,
         time: new Date()
       }];
+      
+      // If a place was recommended, ask for confirmation
+      if (recommendedPlace) {
+        awaitingConfirmation = true;
+        setTimeout(() => {
+          messages = [...messages, {
+            type: 'bot',
+            text: `🏠 Would you like me to find local hosts in **${recommendedPlace}** who can give you an authentic experience? They can help with homestays, local tours, and hidden gems!`,
+            time: new Date(),
+            showHostButton: true
+          }];
+        }, 1000);
+      }
     } catch (error) {
       messages = [...messages, {
         type: 'bot',
@@ -305,6 +385,22 @@ REMEMBER: Analyze user's description carefully and recommend ONLY ONE place that
           <div class="flex {message.type === 'user' ? 'justify-end' : 'justify-start'}">
             <div class="max-w-[85%] {message.type === 'user' ? 'bg-kerala-green text-white' : 'bg-gray-100 text-gray-800'} rounded-2xl px-4 py-3 {message.type === 'user' ? 'rounded-br-md' : 'rounded-bl-md'}">
               <p class="whitespace-pre-line">{message.text}</p>
+              {#if message.showHostButton}
+                <div class="flex gap-2 mt-3">
+                  <button 
+                    on:click={goToMatching}
+                    class="flex-1 py-2 bg-gradient-to-r from-kerala-green to-kerala-gold text-white rounded-lg font-semibold hover:opacity-90 transition flex items-center justify-center gap-2"
+                  >
+                    🏠 Find Local Hosts
+                  </button>
+                  <button 
+                    on:click={suggestOtherPlaces}
+                    class="flex-1 py-2 bg-white border-2 border-kerala-green text-kerala-green rounded-lg font-semibold hover:bg-kerala-green/10 transition flex items-center justify-center gap-2"
+                  >
+                    🔄 Try Other Options
+                  </button>
+                </div>
+              {/if}
               <span class="text-xs {message.type === 'user' ? 'text-white/70' : 'text-gray-500'} mt-2 block">
                 {message.time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
               </span>

@@ -1,4 +1,6 @@
 <script>
+  import { onMount } from 'svelte';
+  
   let isMenuOpen = false;
   let showModal = false;
   let modalType = 'signin';
@@ -7,6 +9,7 @@
   let submitMessage = '';
   let submitSuccess = false;
   let existingUsers = [];
+  let currentUser = null; // Store current logged-in user
 
   // Form data
   let formData = {
@@ -19,6 +22,26 @@
     specialExperience: '',
     activities: []
   };
+
+  // Check for logged-in user on component mount
+  onMount(() => {
+    const storedUser = localStorage.getItem('keralaUser');
+    if (storedUser) {
+      try {
+        currentUser = JSON.parse(storedUser);
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('keralaUser');
+      }
+    }
+  });
+
+  // Handle user logout
+  function handleLogout() {
+    localStorage.removeItem('keralaUser');
+    currentUser = null;
+    window.location.href = '/';
+  }
 
   // Separate APIs for Host and Traveller
   const HOST_API_URL = 'https://script.google.com/macros/s/AKfycbyMJOX6SNcCuExmI_98GlgFRBvHfSxAXS-7DwWgxcXx1ZCOBTex0Z1ax3oEYqKRZ-LiJQ/exec';
@@ -44,29 +67,38 @@
 
   // Check if email already exists
   function checkEmailExists(email) {
-    return existingUsers.some(user => 
-      user.email && user.email.toString().toLowerCase().trim() === email.toLowerCase().trim()
-    );
+    return existingUsers.some(user => {
+      const userEmail = user.email || user.Email || '';
+      return userEmail.toString().toLowerCase().trim() === email.toLowerCase().trim();
+    });
   }
 
   // Validate sign in credentials
   function validateSignIn(email, password) {
-    const user = existingUsers.find(user => 
-      user.email && user.email.toString().toLowerCase().trim() === email.toLowerCase().trim()
-    );
+    const user = existingUsers.find(user => {
+      const userEmail = user.email || user.Email || '';
+      return userEmail.toString().toLowerCase().trim() === email.toLowerCase().trim();
+    });
+    
     if (!user) {
       return { valid: false, message: 'Email not found. Please sign up first.' };
     }
     
     // Check password - try different possible field names
-    const storedPassword = user.password || user.Password || user['password'] || '';
+    const storedPassword = user.password || user.Password || '';
     const inputPassword = password.toString().trim();
     const storedPasswordTrimmed = storedPassword.toString().trim();
+    
+    console.log('Stored password:', storedPasswordTrimmed, 'Input password:', inputPassword); // Debug
     
     if (storedPasswordTrimmed !== inputPassword) {
       return { valid: false, message: 'Incorrect password. Please try again.' };
     }
-    return { valid: true, user };
+    
+    // Get user name from various possible field names
+    const userName = user.name || user.Name || user['name '] || user.fullName || user['Full Name'] || 'User';
+    
+    return { valid: true, user: { ...user, name: userName } };
   }
 
   function toggleMenu() {
@@ -140,19 +172,58 @@
         return;
       }
       
+      // Get user details with fallbacks for different field names
+      const userName = validation.user.name || validation.user.Name || 'User';
+      const userEmail = validation.user.email || validation.user.Email || formData.email;
+      
       // Store user info in localStorage
       localStorage.setItem('keralaUser', JSON.stringify({
-        name: validation.user.name,
-        email: validation.user.email,
-        role: userRole
+        name: userName,
+        email: userEmail,
+        role: userRole,
+        userData: validation.user // Store full user data for dashboard
       }));
       
+      // Update current user state
+      currentUser = {
+        name: userName,
+        email: userEmail,
+        role: userRole,
+        userData: validation.user
+      };
+      
       submitSuccess = true;
-      submitMessage = `Welcome back, ${validation.user.name || 'User'}! Redirecting...`;
+      submitMessage = `Welcome back, ${userName}! Redirecting...`;
       
       setTimeout(() => {
-        // Redirect to chat page
-        window.location.href = '/chat';
+        // Redirect based on role - hosts go to dashboard
+        if (userRole === 'host') {
+          window.location.href = '/host-dashboard';
+        } else {
+          // For travellers, check if they have active bookings
+          const bookingRequests = JSON.parse(localStorage.getItem('bookingRequests') || '[]');
+          const travellerEmail = validation.user.email || validation.user.Email || formData.email;
+          const travellerName = userName;
+          const userBookings = bookingRequests.filter(b => 
+            b.traveller === travellerName || b.travellerEmail === travellerEmail
+          );
+          
+          // Check if there's an active booking (pending or confirmed without review)
+          const experiences = JSON.parse(localStorage.getItem('travellerExperiences') || '[]');
+          const hasActiveBooking = userBookings.some(booking => {
+            const hasReview = experiences.some(exp => 
+              exp.hostName === booking.hostName && 
+              (exp.travellerName === travellerName || exp.travellerEmail === travellerEmail)
+            );
+            return (booking.status === 'pending' || booking.status === 'confirmed') && !hasReview && !booking.tripEnded;
+          });
+          
+          if (hasActiveBooking) {
+            window.location.href = '/traveller-dashboard';
+          } else {
+            window.location.href = '/chat';
+          }
+        }
       }, 1500);
       isSubmitting = false;
       return;
@@ -177,25 +248,29 @@
     // Create payload based on role
     let payload;
     if (userRole === 'host') {
-      // Host payload with all fields
+      // Host payload with all fields - matching Google Sheet column names exactly
       payload = {
-        'name': formData.fullName,
-        'place': formData.location || '',
-        'about you': formData.aboutYou || '',
-        'email': formData.email,
-        'activities': formData.activities.join(', '),
-        'experience': formData.specialExperience || '',
-        'password': formData.password,
-        'phone number': formData.phone || ''
+        'Name': formData.fullName,
+        'Location': formData.location || '',
+        'About You': formData.aboutYou || '',
+        'Email': formData.email,
+        'Activities': formData.activities.join(', '),
+        'Experience': formData.specialExperience || '',
+        'Password': formData.password,
+        'Phone Number': formData.phone || ''
       };
     } else {
-      // Traveller payload - simpler with just name, email, password
+      // Traveller payload - match exact Google Sheet column names (lowercase)
       payload = {
-        'name': formData.fullName,
-        'email': formData.email,
-        'password': formData.password
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password
       };
     }
+
+    console.log('Form data before payload:', formData); // Debug form data
+    console.log('Full name value:', formData.fullName); // Debug full name specifically
+    console.log('Sending payload:', JSON.stringify(payload)); // Debug log
 
     try {
       await fetch(getApiUrl(), {
@@ -217,12 +292,33 @@
         role: userRole
       }));
       
+      // Update current user state
+      currentUser = {
+        name: formData.fullName,
+        email: formData.email,
+        role: userRole
+      };
+      
       // Refresh user list
       await fetchExistingUsers();
       
       setTimeout(() => {
-        // Redirect to chat page
-        window.location.href = '/chat';
+        // Redirect based on role - hosts go to dashboard
+        if (userRole === 'host') {
+          window.location.href = '/host-dashboard';
+        } else {
+          // For new travellers, check if they have active bookings (unlikely but check anyway)
+          const bookingRequests = JSON.parse(localStorage.getItem('bookingRequests') || '[]');
+          const userBookings = bookingRequests.filter(b => 
+            b.traveller === formData.fullName || b.travellerEmail === formData.email
+          );
+          
+          if (userBookings.length > 0) {
+            window.location.href = '/traveller-dashboard';
+          } else {
+            window.location.href = '/chat';
+          }
+        }
       }, 1500);
 
     } catch (error) {
@@ -250,12 +346,41 @@
       </ul>
 
       <div class="hidden md:flex items-center space-x-4">
-        <button on:click={() => openModal('signin')} class="px-4 py-2 text-white border border-white rounded-lg hover:bg-white hover:text-kerala-green transition">
-          Sign In
-        </button>
-        <button on:click={() => openModal('signup')} class="px-4 py-2 bg-kerala-gold text-white rounded-lg hover:bg-yellow-600 transition">
-          Sign Up
-        </button>
+        {#if currentUser}
+          <!-- User is logged in -->
+          <div class="flex items-center space-x-3">
+            <span class="text-white">Welcome, <span class="text-kerala-gold font-semibold">{currentUser.name}</span></span>
+            <div class="relative group">
+              <button class="flex items-center space-x-1 text-white hover:text-kerala-gold transition">
+                <span class="text-2xl">{currentUser.role === 'host' ? '🏠' : '🧳'}</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <!-- Dropdown menu -->
+              <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div class="py-2">
+                  <a href={currentUser.role === 'host' ? '/host-dashboard' : '/traveller-dashboard'} 
+                     class="block px-4 py-2 text-gray-800 hover:bg-kerala-green hover:text-white transition">
+                    Dashboard
+                  </a>
+                  <button on:click={handleLogout} 
+                          class="w-full text-left px-4 py-2 text-gray-800 hover:bg-red-500 hover:text-white transition">
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {:else}
+          <!-- User is not logged in -->
+          <button on:click={() => openModal('signin')} class="px-4 py-2 text-white border border-white rounded-lg hover:bg-white hover:text-kerala-green transition">
+            Sign In
+          </button>
+          <button on:click={() => openModal('signup')} class="px-4 py-2 bg-kerala-gold text-white rounded-lg hover:bg-yellow-600 transition">
+            Sign Up
+          </button>
+        {/if}
       </div>
 
       <button on:click={toggleMenu} class="md:hidden text-white">

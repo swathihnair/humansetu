@@ -1,0 +1,308 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="How to Reach - Kerala Tourism">
+  <div class="min-h-screen relative overflow-hidden">
+    <!-- Kerala Themed Background -->
+    <div class="fixed inset-0">
+      <div 
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style="background-image: url('https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1920');"
+      ></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-kerala-green/90 via-kerala-green/70 to-kerala-gold/50"></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="relative z-10">
+      <!-- Header -->
+      <header class="bg-black/20 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <a href="/plan-my-trip" class="text-2xl font-bold text-white hover:scale-105 transition-transform">
+            Kerala<span class="text-kerala-gold">Tourism</span>
+          </a>
+          <div class="flex items-center gap-4">
+            <a href="/plan-my-trip" class="px-4 py-2 text-white/80 border border-white/20 rounded-full hover:bg-white/10 transition-all hover:scale-105">
+              ← Back to Plan My Trip
+            </a>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Hero Section -->
+      <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="relative mb-12 rounded-3xl overflow-hidden animate-slide-up shadow-2xl">
+          <div class="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 bg-[length:200%_100%] animate-gradient"></div>
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=1920')] bg-cover bg-center opacity-20"></div>
+          
+          <div class="relative p-8 md:p-16">
+            <div class="text-center">
+              <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center text-5xl mx-auto mb-6 animate-float">
+                🚗
+              </div>
+              <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
+                How to Reach Kerala
+              </h1>
+              <p class="text-white/90 text-xl md:text-2xl mb-8">
+                Complete transportation guide to reach God's Own Country
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Transportation Options -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- By Air -->
+          <div class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 overflow-hidden animate-slide-up">
+            <div class="p-6">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center text-3xl mb-4">
+                ✈️
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3">By Air</h3>
+              <div class="space-y-3">
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">Cochin International Airport</h4>
+                  <p class="text-white/70 text-sm mb-2">Main international airport - 30km from Kochi</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">International</span>
+                    <span class="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">24/7</span>
+                    <span class="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">Cargo</span>
+                  </div>
+                  <div class="mt-2 text-white/60 text-xs">
+                    <p>📍 Nedumbassery, Kochi</p>
+                    <p>📞 +91-484-2610115</p>
+                  </div>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">Trivandrum International Airport</h4>
+                  <p class="text-white/70 text-sm mb-2">Southern gateway - 6km from city center</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">International</span>
+                    <span class="px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded-full">Domestic</span>
+                  </div>
+                  <div class="mt-2 text-white/60 text-xs">
+                    <p>📍 Thiruvananthapuram</p>
+                    <p>📞 +91-471-250024</p>
+                  </div>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">Calicut International Airport</h4>
+                  <p class="text-white/70 text-sm mb-2">Northern gateway - 28km from city</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">International</span>
+                    <span class="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">Haj Terminal</span>
+                  </div>
+                  <div class="mt-2 text-white/60 text-xs">
+                    <p>📍 Karipur, Kozhikode</p>
+                    <p>📞 +91-495-2760545</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- By Rail -->
+          <div class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 overflow-hidden animate-slide-up animation-delay-200">
+            <div class="p-6">
+              <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center text-3xl mb-4">
+                🚂
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3">By Rail</h3>
+              <div class="space-y-3">
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">Thiruvananthapuram Central</h4>
+                  <p class="text-white/70 text-sm mb-2">Major railway station in south</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">Major Hub</span>
+                    <span class="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">WiFi</span>
+                  </div>
+                  <div class="mt-2 text-white/60 text-xs">
+                    <p>📍 Thampanoor, TVM</p>
+                    <p>🚄 Connects to all major cities</p>
+                  </div>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">Ernakulam Junction</h4>
+                  <p class="text-white/70 text-sm mb-2">Busiest station in Kerala</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">South Zone</span>
+                    <span class="px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded-full">ER Code</span>
+                  </div>
+                  <div class="mt-2 text-white/60 text-xs">
+                    <p>📍 Kochi, Ernakulam</p>
+                    <p>🚄 High connectivity</p>
+                  </div>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">Kozhikode Railway Station</h4>
+                  <p class="text-white/70 text-sm mb-2">Important northern hub</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-red-500/20 text-red-300 text-xs rounded-full">Malabar</span>
+                    <span class="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">CLT Code</span>
+                  </div>
+                  <div class="mt-2 text-white/60 text-xs">
+                    <p>📍 Kozhikode</p>
+                    <p>🚄 Historical significance</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- By Road -->
+          <div class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 overflow-hidden animate-slide-up animation-delay-400">
+            <div class="p-6">
+              <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center text-3xl mb-4">
+                🚌
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3">By Road</h3>
+              <div class="space-y-3">
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">National Highways</h4>
+                  <p class="text-white/70 text-sm mb-2">Well-connected highway network</p>
+                  <div class="space-y-1 text-white/60 text-xs">
+                    <p>🛣️ NH 17: Mumbai to Kochi</p>
+                    <p>🛣️ NH 47: Salem to Kanyakumari</p>
+                    <p>🛣️ NH 49: Kochi to Dhanushkodi</p>
+                    <p>🛣️ NH 212: Kozhikode to Mysore</p>
+                  </div>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">KSRTC Buses</h4>
+                  <p class="text-white/70 text-sm mb-2">State-run bus services</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">Super Fast</span>
+                    <span class="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">Express</span>
+                    <span class="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">AC Volvo</span>
+                  </div>
+                  <div class="mt-2 text-white/60 text-xs">
+                    <p>📱 Book online: ksrtc.in</p>
+                    <p>🕐 24/7 helpline: 1800-425-7778</p>
+                  </div>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
+                  <h4 class="font-semibold text-white mb-1">Private Bus Services</h4>
+                  <p class="text-white/70 text-sm mb-2">Private operators available</p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded-full">Kallada</span>
+                    <span class="px-2 py-1 bg-red-500/20 text-red-300 text-xs rounded-full">Arya</span>
+                    <span class="px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full">Parveen</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Distance Chart -->
+        <div class="mt-12 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 animate-slide-up animation-delay-600">
+          <h2 class="text-3xl font-bold text-white mb-6">Distance from Major Cities</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white/5 rounded-xl p-4">
+              <h4 class="font-semibold text-white mb-2">From Bangalore</h4>
+              <div class="space-y-1 text-white/70 text-sm">
+                <p>🚗 By Road: 570 km (10-12 hrs)</p>
+                <p>🚂 By Train: 8-10 hrs</p>
+                <p>✈️ By Flight: 1 hr (to Kochi)</p>
+              </div>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4">
+              <h4 class="font-semibold text-white mb-2">From Chennai</h4>
+              <div class="space-y-1 text-white/70 text-sm">
+                <p>🚗 By Road: 700 km (12-14 hrs)</p>
+                <p>🚂 By Train: 10-12 hrs</p>
+                <p>✈️ By Flight: 1.5 hrs</p>
+              </div>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4">
+              <h4 class="font-semibold text-white mb-2">From Mumbai</h4>
+              <div class="space-y-1 text-white/70 text-sm">
+                <p>🚗 By Road: 1,200 km (20-24 hrs)</p>
+                <p>🚂 By Train: 24-30 hrs</p>
+                <p>✈️ By Flight: 2 hrs</p>
+              </div>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4">
+              <h4 class="font-semibold text-white mb-2">From Delhi</h4>
+              <div class="space-y-1 text-white/70 text-sm">
+                <p>🚗 By Road: 2,700 km (45-50 hrs)</p>
+                <p>🚂 By Train: 40-48 hrs</p>
+                <p>✈️ By Flight: 3 hrs</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Travel Tips -->
+        <div class="mt-12 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 animate-slide-up animation-delay-800">
+          <h2 class="text-3xl font-bold text-white mb-6">Travel Tips</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-kerala-gold/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                🕐
+              </div>
+              <div>
+                <h4 class="font-semibold text-white mb-1">Best Time to Travel</h4>
+                <p class="text-white/70 text-sm">October to March offers pleasant weather. Avoid monsoon season (June-August) for road travel.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-kerala-gold/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                🎫
+              </div>
+              <div>
+                <h4 class="font-semibold text-white mb-1">Book in Advance</h4>
+                <p class="text-white/70 text-sm">Especially during peak tourist season (December-January) and festival times.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-kerala-gold/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                🧳
+              </div>
+              <div>
+                <h4 class="font-semibold text-white mb-1">Pack Smart</h4>
+                <p class="text-white/70 text-sm">Cotton clothes, rain gear, comfortable shoes, and mosquito repellents are essential.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-kerala-gold/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                📱
+              </div>
+              <div>
+                <h4 class="font-semibold text-white mb-1">Stay Connected</h4>
+                <p class="text-white/70 text-sm">Local SIM cards easily available. Most areas have good mobile network coverage.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  .animate-slide-up { animation: slideUp 0.6s ease-out forwards; opacity: 0; }
+  .animate-gradient { animation: gradient 3s ease infinite; }
+  .animate-float { animation: float 4s ease-in-out infinite; }
+  
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-600 { animation-delay: 600ms; }
+  .animation-delay-800 { animation-delay: 800ms; }
+</style>
