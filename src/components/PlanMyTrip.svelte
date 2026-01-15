@@ -22,7 +22,7 @@
       icon: '🚨',
       title: 'Emergency Contact',
       description: '24/7 helpline numbers',
-      color: 'from-red-500 to-rose-600'
+      color: 'from-purple-500 to-indigo-600'
     },
     {
       icon: '💱',
@@ -41,9 +41,9 @@
       case 'Currency':
         return '/currency';
       case 'Tourist Information Centers':
-        return '#'; // Update when page is created
+        return '/tourist-info';
       case 'Emergency Contact':
-        return '#'; // Update when page is created
+        return '/emergency';
       default:
         return '#';
     }
@@ -67,12 +67,12 @@
         window.location.href = '/currency';
         break;
       case 'Tourist Information Centers':
-        console.log('Navigate to Tourist Information Centers');
-        // Add navigation when page is created
+        console.log('Navigating to /tourist-info');
+        window.location.href = '/tourist-info';
         break;
       case 'Emergency Contact':
-        console.log('Navigate to Emergency Contact');
-        // Add navigation when page is created
+        console.log('Navigating to /emergency');
+        window.location.href = '/emergency';
         break;
       default:
         console.log('Clicked:', service.title);
